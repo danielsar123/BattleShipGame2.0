@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 2684951131884946253}
   - component: {fileID: 4978970548939623954}
   m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
+  m_Name: CubePrefab
+  m_TagString: CubePrefab
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 6936797414297653060}
   m_Layer: 0
   m_Name: BoardUnitRoot
-  m_TagString: Untagged
+  m_TagString: BoardUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -390,7 +390,7 @@ GameObject:
   - component: {fileID: 6223885334646930767}
   m_Layer: 0
   m_Name: BoardUnit
-  m_TagString: BoardUnit
+  m_TagString: PlayerBoardUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -496,5 +496,6 @@ MonoBehaviour:
   tmpBoardUnitLabel: {fileID: 634779485901986876}
   row: 0
   col: 0
+  CubePrefab: {fileID: 849122483606803781}
   occupied: 0
   hit: 0

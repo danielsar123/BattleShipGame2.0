@@ -8,6 +8,7 @@ public class BoardUnit : MonoBehaviour
     public TMP_Text tmpBoardUnitLabel;
     public int row;
     public int col;
+    public GameObject CubePrefab;
 
     public bool occupied = false;
     public bool hit = false;

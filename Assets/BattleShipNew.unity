@@ -925,7 +925,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BoardUnitPrefab: {fileID: 1721956133909825588, guid: 37725cf8a4f823847aff8ef26388a8e4, type: 3}
-  BoardUnitAttackPrefab: {fileID: 1721956133909825588, guid: 37725cf8a4f823847aff8ef26388a8e4, type: 3}
+  BoardUnitAttackPrefab: {fileID: 5289048200967833903, guid: 07cfeccb2f2608d47a9e94f9a57e3df9, type: 3}
   BlockVisualizerPrefab: {fileID: 1218190468335806632, guid: b78893acf2f82c94f809883f579b3d3a, type: 3}
   ShipSizes: 0200000003000000030000000400000005000000
   ShipSize: 2
@@ -2092,13 +2092,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1812668123}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7079217, y: -0, z: -0, w: 0.706291}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 7, y: 12, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 90.130005, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1935338703
 GameObject:
   m_ObjectHideFlags: 0

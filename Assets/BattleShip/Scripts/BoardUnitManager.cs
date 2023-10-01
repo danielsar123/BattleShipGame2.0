@@ -90,12 +90,14 @@ public class BoardUnitManager : MonoBehaviour
         // capture the mouse position and cast a ray to see what object we hit
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+      
+
         if (Input.mousePosition != null)
         {
             if (Physics.Raycast(ray, out tmpHitHighlight, 100))
             {
                 BoardUnit tmpUI = tmpHitHighlight.transform.GetComponent<BoardUnit>();
-                if (tmpHitHighlight.transform.tag.Equals("BoardUnit") && !tmpUI.occupied)
+                if (tmpHitHighlight.transform.tag.Equals("PlayerBoardUnit") && !tmpUI.occupied)
                 {
                     BoardUnit boardData = boardPlayer.board[tmpUI.row, tmpUI.col].transform.GetComponent<BoardUnit>();
 
@@ -127,7 +129,7 @@ public class BoardUnitManager : MonoBehaviour
                                 BoardUnit bpUI = bp.GetComponentInChildren<BoardUnit>();
                                 if (!bpUI.occupied)
                                 {
-                                    visual.GetComponent<Renderer>().material.color = Color.gray;
+                                    visual.GetComponent<Renderer>().material.color = Color.grey;
                                 }
                                 else
                                 {
@@ -162,6 +164,61 @@ public class BoardUnitManager : MonoBehaviour
                                 visual.transform.parent = this.tmpBlockHolder.transform;
                             }
 
+                        }
+
+                    }
+                }
+            }
+        }
+        if (Input.GetMouseButton(0))
+        {
+            // capture the mouse position and cast a ray to see what object we hit
+            RaycastHit hit;
+
+            RaycastHit[] hits = Physics.RaycastAll(ray, 100);
+            foreach (var x in hits)
+            {
+                Debug.Log("Hit object: " +  x.transform.name);
+            }
+
+
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                if (hit.transform.tag.Equals("PlayerBoardUnit"))
+                {
+                    BoardUnit tmpUI = hit.transform.GetComponentInChildren<BoardUnit>();
+
+                    if (PLACE_BLOCK && OK_TO_PLACE)
+                    {
+                        if (!Vertical)
+                        {
+                            for(int i = 0; i < ShipSize; i++)
+                            {
+                                GameObject sB = boardPlayer.board[tmpUI.row + i, tmpUI.col];
+
+                                BoardUnit bu = sB.transform.GetComponentInChildren<BoardUnit>();
+                                bu.occupied = true;
+                           //     bu.CubePrefab.gameObject.GetComponent<MeshRenderer>().material.color = Color.green;
+                            //    bu.CubePrefab.gameObject.SetActive(true);
+                                bu.GetComponent<MeshRenderer>().material.color = Color.green;
+                                boardPlayer.board[tmpUI.row + i, tmpUI.col] = sB;
+
+                            }
+                        }
+
+                        if (Vertical)
+                        {
+                            for(int i = 0; i < ShipSize; i++)
+                            {
+                                GameObject sB = boardPlayer.board[tmpUI.row, tmpUI.col + i];
+
+                                BoardUnit bu = sB.transform.GetComponentInChildren<BoardUnit>();
+                                bu.occupied = true;
+                                bu.GetComponent<MeshRenderer>().material.color = Color.green;
+
+                                boardPlayer.board[tmpUI.row, tmpUI.col + i] = sB;
+
+                            }
                         }
                     }
                 }
