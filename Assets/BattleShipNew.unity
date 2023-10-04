@@ -274,7 +274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &93900750
 RectTransform:
   m_ObjectHideFlags: 0
@@ -579,12 +579,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1255971005}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: OnShipButtonClick
+        m_MethodName: butBoardPieceSelected
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -927,10 +927,14 @@ MonoBehaviour:
   BoardUnitPrefab: {fileID: 1721956133909825588, guid: 37725cf8a4f823847aff8ef26388a8e4, type: 3}
   BoardUnitAttackPrefab: {fileID: 5289048200967833903, guid: 07cfeccb2f2608d47a9e94f9a57e3df9, type: 3}
   BlockVisualizerPrefab: {fileID: 1218190468335806632, guid: b78893acf2f82c94f809883f579b3d3a, type: 3}
-  ShipSizes: 0200000003000000030000000400000005000000
   ShipSize: 2
   Vertical: 1
-  boardPiecesPref: []
+  boardPiecesPref:
+  - {fileID: 100000, guid: b78d71fc2b0723c418dee0b99aa41db7, type: 3}
+  - {fileID: 100000, guid: 676c78f930ebe214bbb135bf0616b145, type: 3}
+  - {fileID: 100000, guid: fced151d03c8d7c4ea084b0fa84e4d6b, type: 3}
+  - {fileID: 100038, guid: 408ea4b8b2681954daebe38e2bdfc97b, type: 3}
+  - {fileID: 100000, guid: d1cd57c78c4fd374898396cfd01e9236, type: 3}
   currentShipID: 0
   count: 0
 --- !u!4 &525200035
@@ -1065,12 +1069,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1255971005}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: OnShipButtonClick
+        m_MethodName: butBoardPieceSelected
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1198,12 +1202,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1255971005}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: OnShipButtonClick
+        m_MethodName: butBoardPieceSelected
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1407,12 +1411,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1255971005}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: OnShipButtonClick
+        m_MethodName: butBoardPieceSelected
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1593,6 +1597,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75df5ac437a75c74e8ce471fc2952fab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectionOfPlayersPieceButtons:
+  - {fileID: 822064080}
+  - {fileID: 620164603}
+  - {fileID: 1304623918}
+  - {fileID: 207945631}
+  - {fileID: 619737079}
+  butOrientation: {fileID: 1567544435}
+  butUIReset: {fileID: 0}
+  butExit: {fileID: 0}
+  textureHorizontal: {fileID: 21300000, guid: 442e39c986a5a664a9c0edde91e41651, type: 3}
+  textureVertical: {fileID: 21300000, guid: fff1a5a38a9f1714a9274fe9df3bce79, type: 3}
+  DisplayInstructions: 0
+  Orientation: 0
 --- !u!1 &1304623916
 GameObject:
   m_ObjectHideFlags: 0
@@ -1678,7 +1695,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1255971005}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: OnShipButtonClick
+        m_MethodName: butBoardPieceSelected
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1891,7 +1908,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1255971005}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: OnOrientationClick
+        m_MethodName: butChangeOrientation
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1921,8 +1938,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 442e39c986a5a664a9c0edde91e41651, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
