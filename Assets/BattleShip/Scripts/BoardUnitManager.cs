@@ -257,22 +257,29 @@ public class BoardUnitManager : MonoBehaviour
     }
     private void CheckWhichShipWasPlaced(int row, int col)
     {
+        Debug.Log("Attempting to place ship with ID: " + currentShipID + " at position: " + row + ", " + col);
         switch (currentShipID)
         {
             case 0:
                 {
                     if (!Vertical)
                     {
-                        // place it as vertical
+                        Debug.Log($"id is {currentShipID}");
+                        
                         GameObject testingVisual = GameObject.Instantiate(boardPiecesPref[currentShipID],
-                                                   new Vector3(row + 2, boardPiecesPref[currentShipID].transform.position.y,col),
+                                                   new Vector3(row + 2 , boardPiecesPref[currentShipID].transform.position.y,col),
                                                    boardPiecesPref[currentShipID].transform.rotation) as GameObject;
                         testingVisual.transform.RotateAround(testingVisual.transform.position, Vector3.up, 90.0f);
+                   
+                        if (testingVisual == null)
+                        {
+                            Debug.LogError("Failed to instantiate Aircraft Carrier prefab.");
+                        }
                     }
                     else
                     {
                         GameObject testingVisual = GameObject.Instantiate(boardPiecesPref[currentShipID],
-                                                new Vector3(row, boardPiecesPref[currentShipID].transform.position.y, col+2),
+                                                new Vector3(row, boardPiecesPref[currentShipID].transform.position.y, col +2),
                                                 boardPiecesPref[currentShipID].transform.rotation) as GameObject;
                     }
                     count++;
@@ -282,6 +289,7 @@ public class BoardUnitManager : MonoBehaviour
                 {
                     if (!Vertical)
                     {
+                        Debug.Log($"id is {currentShipID}");
                         // place it as vertical
                         GameObject testingVisual = GameObject.Instantiate(boardPiecesPref[currentShipID],
                                                    new Vector3(row + 1.5f, boardPiecesPref[currentShipID].transform.position.y, col),
@@ -301,6 +309,7 @@ public class BoardUnitManager : MonoBehaviour
                 {
                     if (!Vertical)
                     {
+                        Debug.Log($"id is {currentShipID}");
                         // place it as vertical
                         GameObject testingVisual = GameObject.Instantiate(boardPiecesPref[currentShipID],
                                                    new Vector3(row + 1, boardPiecesPref[currentShipID].transform.position.y, col),
@@ -320,6 +329,7 @@ public class BoardUnitManager : MonoBehaviour
                 {
                     if (!Vertical)
                     {
+                        Debug.Log($"id is {currentShipID}");
                         // place it as vertical
                         GameObject testingVisual = GameObject.Instantiate(boardPiecesPref[currentShipID],
                                                    new Vector3(row + 1, boardPiecesPref[currentShipID].transform.position.y, col),
@@ -339,6 +349,7 @@ public class BoardUnitManager : MonoBehaviour
                 {
                     if (!Vertical)
                     {
+                        Debug.Log($"id is {currentShipID}");
                         // place it as vertical
                         GameObject testingVisual = GameObject.Instantiate(boardPiecesPref[currentShipID],
                                                    new Vector3(row + 0.5f, boardPiecesPref[currentShipID].transform.position.y, col),

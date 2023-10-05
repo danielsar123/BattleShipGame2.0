@@ -52,9 +52,20 @@ public class UIManager : MonoBehaviour
 
     private void BoardVer1_OnBoardPiecePlaced(int id)
     {
+
+        if (id >= 0 && id < collectionOfPlayersPieceButtons.Count)
+        {
+            // disable button representing the piece
+            Debug.Log($"id = {id}");
+            collectionOfPlayersPieceButtons[id].gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning($"Invalid id: {id}");
+        }
         // disable button representing the piece
-        Debug.Log($"id = {id}");
-        collectionOfPlayersPieceButtons[id].gameObject.SetActive(false);
+       // Debug.Log($"id = {id}");
+     //   collectionOfPlayersPieceButtons[id].gameObject.SetActive(false);
     }
 
     private void Start()
