@@ -65,122 +65,73 @@ public class BoardAI : Board
 
     private void CheckBoardForPlacement(int row, int col, int size, bool hor)
     {
-        Debug.Log("Starting Verification Process");
-        // logic is following:
-        // 1) we need to check and see that at the given location, we can place our ship
-        // 2) If it is avialble, then we will go ahead and put it in the location
-        GameObject checkUnit = board[row, col];
+        bool shipPlaced = false;
+        int maxAttempts = 100;
+        int currentAttempt = 0;
 
-        var bu = checkUnit.GetComponentInChildren<BoardUnit>();
-
-        if (bu.occupied || (row + size > 9) || (col + size > 9))
+        while (!shipPlaced && currentAttempt < maxAttempts)
         {
-            Debug.Log(string.Format("Location occupied at [{0}, {1}]", row, col));
-            // it is occupied, generate new random row/col and call function again...
-            int r1 = Random.Range(0, 9);
-            int c1 = Random.Range(0, 9);
-            Debug.Log(string.Format("RE-TRY WITH NEW COORDINATES [{0}, {1}]", r1, c1));
-            CheckBoardForPlacement(r1, c1, size, hor);
-            return;
-        }
+            bool okToPlace = true;
 
-        // We need one pass for verification 
-
-        bool okToPlace = true;
-        Debug.Log(string.Format("Starting pass 1 for plapcement. OK? {0}", okToPlace));
-
-        // if (!hor && (row <= 10 - size))
-        if (!hor && (row + size < 10))
-        {
-            for (int i = 0; i < size; i++)
-            {
-                GameObject bp = board[row = i, col];
-                BoardUnit bpUI = bp.GetComponentInChildren<BoardUnit>();
-                if (!bpUI.occupied)
-                {
-                    // visual.GetComponent<Renderer>().material.color = Color.magneta; // ok to placr
-                    //okToPlace = true;
-
-                }
-                else
-                {
-                    //visual.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
-                    //visual.GetComponent<Renderer>().material.color = Color.yellow; // not ok
-                    okToPlace = false;
-                }
-                //visual transform.parent = this.tmpBlockHolder.transform;
-            }
-        }
-        if(hor && (col + size < 10))
-        {
-            for(int i = 0; i < size; i++)
-            {
-                GameObject bp = board[row, col + i];
-                BoardUnit bpUI = bp.GetComponentInChildren<BoardUnit>();
-                if (!bpUI.occupied)
-                {
-                    //visual.GetComponent<Renderer>().material.color = Color.magneta; // ok to place
-                    // okToPlace = true;
-                }
-                else
-                {
-                    // visual.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
-                    // visual.GetComponent<Renderer>().material.color = Color.yellow; // not ok
-                    okToPlace = false;
-                }
-
-                // visual.transform.parent = this.tmpBlockHolder.transform
-            }
-        }
-        Debug.Log(string.Format("END PASS 1 for Placement, OK? {0}", okToPlace));
-
-        // next pass for actual placement
-        if (okToPlace)
-        {
-            if (!hor)
-            {
-                for(int i = 0; i < size; i++)
-                {
-                    // these game objects can be removed since they are only for debugging 
-                    GameObject visual = GameObject.Instantiate(cubePrefab, new Vector3(row + i + 11, 0.9f, col),
-                                                               cubePrefab.transform.rotation) as GameObject;
-                    visual.GetComponent<Renderer>().material.color = Color.yellow;
-                    //visual.tag = "enemyPrefabPH";
-
-                    GameObject sB = board[row + i, col];
-                    sB.GetComponentInChildren<BoardUnit>().occupied = true;
-                    board[row + i, col] = sB;
-                    visual.gameObject.name = string.Format("EN-C-[{0},{1}]", row, col + i);
-                    Debug.Log(string.Format("Enemy ship will be place at location [{0}, {1}]", row + i, col));
-                }
-            }
+            // Check boundaries and occupancy
             if (hor)
             {
-                for (int i = 0; i < size; i++)
-                {
-                    // these game objects can be removed since they are only for debugging 
-                    GameObject visual = GameObject.Instantiate(cubePrefab, new Vector3(row  + 11, 0.9f, col + i),
-                                                               cubePrefab.transform.rotation) as GameObject;
-                    visual.GetComponent<Renderer>().material.color = Color.yellow;
-                    //visual.tag = "enemyPrefabPH";
+                if (col + size > 9)
+                    okToPlace = false;
 
-                    GameObject sB = board[row, col + i];
-                    sB.GetComponentInChildren<BoardUnit>().occupied = true;
-                    board[row, col + i] = sB;
-                    visual.gameObject.name = string.Format("EN-C-[{0},{1}]", row, col + i);
-                    Debug.Log(string.Format("Enemy ship will be place at location [{0}, {1}]", row + i, col));
+                for (int i = 0; i < size && okToPlace; i++)
+                {
+                    if (board[row, col + i].GetComponentInChildren<BoardUnit>().occupied)
+                        okToPlace = false;
                 }
             }
+            else
+            {
+                if (row + size > 9)
+                    okToPlace = false;
+
+                for (int i = 0; i < size && okToPlace; i++)
+                {
+                    if (board[row + i, col].GetComponentInChildren<BoardUnit>().occupied)
+                        okToPlace = false;
+                }
+            }
+
+            if (okToPlace)
+            {
+                if (hor)
+                {
+                    for (int i = 0; i < size; i++)
+                    {
+                        board[row, col + i].GetComponentInChildren<BoardUnit>().occupied = true;
+                        GameObject visual = GameObject.Instantiate(cubePrefab, new Vector3(row + 11, 0.4f, col + i), cubePrefab.transform.rotation);
+                        visual.GetComponent<Renderer>().material.color = Color.yellow;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < size; i++)
+                    {
+                        board[row + i, col].GetComponentInChildren<BoardUnit>().occupied = true;
+                        GameObject visual = GameObject.Instantiate(cubePrefab, new Vector3(row + i + 11, 0.4f, col), cubePrefab.transform.rotation);
+                        visual.GetComponent<Renderer>().material.color = Color.yellow;
+                    }
+                }
+
+                shipPlaced = true;
+            }
+            else
+            {
+                row = Random.Range(0, 9);
+                col = Random.Range(0, 9);
+                hor = Random.Range(0, 2) > 0; // Randomly pick between horizontal and vertical again
+                currentAttempt++;
+            }
         }
-        else
+
+        if (!shipPlaced)
         {
-            int r1 = Random.Range(0, 9);
-            int c1 = Random.Range(0, 9);
-
-            Debug.Log(string.Format("PLACEMENT WAS {2}, STARTING AGAIN, NEW LOCATION [{0}, {1}]", r1, c1, okToPlace));
-
-            CheckBoardForPlacement(r1, c1, size, hor);
+            Debug.LogWarning("Couldn't place ship after " + maxAttempts + " attempts! Consider another action here.");
         }
-
     }
 }
