@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardPlayer : Board
+public class BoardPlayer :  Board
 {
-    public BoardPlayer(GameObject unitPrefab)
+    private Board enemyBoard;
+
+    private bool gameStarted = false; // Flag to check if game has started
+    public BoardPlayer(GameObject unitPrefab, Board enemy)
     {
         BoardUnitPrefab = unitPrefab;
+        this.enemyBoard = enemy;
         ClearBoard();
     }
 
@@ -21,7 +25,7 @@ public class BoardPlayer : Board
             {
                 //instatiate prefab and place it properly on the scene
                 GameObject tmp = GameObject.Instantiate(BoardUnitPrefab, new Vector3(i, 0, j), BoardUnitPrefab.transform.rotation) as GameObject;
-
+                //
                 BoardUnit tmpUI = tmp.GetComponentInChildren<BoardUnit>()
 ;
                 string name = string.Format("B1:[{0:00},{1:00}]", row, col);
@@ -37,4 +41,7 @@ public class BoardPlayer : Board
             row++;
         }
     }
+  
+ 
+   
 }

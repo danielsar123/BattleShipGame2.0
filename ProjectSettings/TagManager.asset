@@ -7,6 +7,7 @@ TagManager:
   - BoardUnit
   - CubePrefab
   - PlayerBoardUnit
+  - EnemyBoardUnit
   layers:
   - Default
   - TransparentFX

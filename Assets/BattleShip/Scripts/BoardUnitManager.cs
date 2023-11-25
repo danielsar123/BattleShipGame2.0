@@ -7,14 +7,13 @@ using UnityEngine.UIElements;
 
 public class BoardUnitManager : MonoBehaviour
 {
-    public delegate void StartGame(bool value);
-    public static event StartGame OnStartGame;
+    public CamerasController controller;
     public delegate void BoardPiecePlaced(int id);
     public static event BoardPiecePlaced OnBoardPiecePlaced;
     public GameObject BoardUnitPrefab;
     public GameObject BoardUnitAttackPrefab;
     public GameObject BlockVisualizerPrefab;
-
+    private bool isAttackPhase = false;
     public BoardPlayer boardPlayer;
     public BoardAI boardEnemy;
 
@@ -76,17 +75,29 @@ public class BoardUnitManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        boardPlayer = new BoardPlayer(BoardUnitPrefab);
-        boardPlayer.CreatePlayerBoard();
-
+        // Initialize the enemy board first
         boardEnemy = new BoardAI(BoardUnitAttackPrefab, BlockVisualizerPrefab);
+        
+
+        // Now initialize the player board with a reference to the enemy board
+        boardPlayer = new BoardPlayer(BoardUnitPrefab, boardEnemy);
+        boardPlayer.CreatePlayerBoard();
         boardEnemy.CreateAiBoard();
 
         currentShipID = 0;
         ShipSize = 0;
     }
+
+    public void StartAttackPlayer()
+    {
+        isAttackPhase = true;
+    }
     void Update()
     {
+        if (isAttackPhase)
+        {
+            HandlePlayerAttack();
+        }
         if (IsBusy)
             return;
 
@@ -94,19 +105,52 @@ public class BoardUnitManager : MonoBehaviour
         {
             PlacePlayerPieces();
         }
-        else
+        else 
         {
             if (placeEnemyShips)
             {
                 placeEnemyShips = false;
                 boardEnemy.PlaceShips();
-                OnStartGame?.Invoke(true);
+                StartAttackPlayer();
+                
               
             }
         }
-        PlacePlayerPieces();
+        
+       
     }
 
+    private void HandlePlayerAttack()
+    {
+        Debug.Log("HandlePlayerAttack called");
+        controller.SwitchToEnemyView();
+        if (Input.GetMouseButtonDown(0)) // Check for left mouse button click
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                // Check if the raycast hit an enemy board unit
+                BoardUnit enemyUnit = hit.transform.GetComponent<BoardUnit>();
+                if (enemyUnit != null && !enemyUnit.hit) // Additional check to ensure unit hasn't already been hit
+                {
+                    Debug.Log("Clicked on an enemy board unit!");
+                    enemyUnit.ProcessHit(); // Process the hit on the enemy unit
+
+                    // Additional logic (e.g., check if the ship is sunk, switch turns, etc.)
+                }
+                else
+                {
+                    Debug.Log("Clicked, but not on an enemy board unit.");
+                }
+            }
+            else
+            {
+                Debug.Log("Raycast didn't hit anything when clicked.");
+            }
+        }
+    }
     private void PlacePlayerPieces()
     {
         // capture the mouse position and cast a ray to see what object we hit
