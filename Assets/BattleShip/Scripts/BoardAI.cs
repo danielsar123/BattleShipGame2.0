@@ -6,15 +6,38 @@ public class BoardAI : Board
 {
     GameObject cubePrefab;
     int[] aiShipSizes = new int[5] { 2, 3, 3, 4, 5 };
-
+    public List<Ship> Ships { get; private set; }
     public BoardAI(GameObject unitPrefab, GameObject prefab)
     {
         BoardUnitPrefab = unitPrefab;
         cubePrefab = prefab;
-
+        Ships = new List<Ship>();
+        // Initialize ships based on aiShipSizes
+        for (int i = 0; i < aiShipSizes.Length; i++)
+        {
+            Ships.Add(new Ship($"Ship{i}", aiShipSizes[i]));
+        }
         ClearBoard();
     }
 
+    private void AssignShipPosition(Ship ship, int row, int col)
+    {
+        ship.AddPosition(row, col);
+        board[row, col].GetComponentInChildren<BoardUnit>().SetShip(ship);
+        board[row, col].GetComponentInChildren<BoardUnit>().occupied = true;
+    }
+    public Ship CheckHit(int row, int col)
+    {
+        foreach (var ship in Ships)
+        {
+            if (ship.Positions.Contains(new Vector2Int(row, col)))
+            {
+                ship.RegisterHit();
+                return ship;
+            }
+        }
+        return null; // No ship at this position
+    }
     public void CreateAiBoard()
     {
         //create a 10x10 board - Board 2
@@ -47,91 +70,52 @@ public class BoardAI : Board
     // Logic for placing enemy warships
     public void PlaceShips()
     {
-        //placeEnemyShips = false;
-        for (int i = 0; i < aiShipSizes.Length; i++)
+        foreach (var ship in Ships)
         {
-            Debug.Log("I AM IN THE PLACE ENEMY SHIP FUNCTION");
+            bool shipPlaced = false;
+            int attempts = 0;
+            while (!shipPlaced && attempts < 100)
+            {
+                int row = Random.Range(0, 10 - ship.Size); // Ensure there is space for the entire ship
+                int col = Random.Range(0, 10 - ship.Size); // Ensure there is space for the entire ship
+                bool horizontal = Random.Range(0, 2) == 0;
 
-            int row = Random.Range(0, 9);
-            int col = Random.Range(0, 9);
-
-            bool ori = (Random.Range(0, 9) > 5) ? true : false;
-
-            Debug.Log(string.Format("Placing ship {0} at location {1}, {2} with orientation: {3}", i, row, col, ori));
-
-            CheckBoardForPlacement(row, col, aiShipSizes[i], ori);
+                shipPlaced = CheckBoardForPlacement(row, col, ship.Size, horizontal, ship);
+                attempts++;
+            }
+            if (!shipPlaced)
+            {
+                Debug.LogWarning($"Failed to place ship: {ship.Name}");
+            }
         }
     }
 
-    private void CheckBoardForPlacement(int row, int col, int size, bool hor)
+    private bool CheckBoardForPlacement(int row, int col, int size, bool hor, Ship ship)
     {
-        bool shipPlaced = false;
-        int maxAttempts = 100;
-        int currentAttempt = 0;
-
-        while (!shipPlaced && currentAttempt < maxAttempts)
+        // Check boundaries and occupancy
+        for (int i = 0; i < size; i++)
         {
-            bool okToPlace = true;
+            int checkRow = hor ? row : row + i;
+            int checkCol = hor ? col + i : col;
 
-            // Check boundaries and occupancy
-            if (hor)
+            // If we are outside the board or the position is already occupied, return false
+            if (checkRow >= 10 || checkCol >= 10 || board[checkRow, checkCol].GetComponentInChildren<BoardUnit>().occupied)
             {
-                if (col + size > 9)
-                    okToPlace = false;
-
-                for (int i = 0; i < size && okToPlace; i++)
-                {
-                    if (board[row, col + i].GetComponentInChildren<BoardUnit>().occupied)
-                        okToPlace = false;
-                }
-            }
-            else
-            {
-                if (row + size > 9)
-                    okToPlace = false;
-
-                for (int i = 0; i < size && okToPlace; i++)
-                {
-                    if (board[row + i, col].GetComponentInChildren<BoardUnit>().occupied)
-                        okToPlace = false;
-                }
-            }
-
-            if (okToPlace)
-            {
-                if (hor)
-                {
-                    for (int i = 0; i < size; i++)
-                    {
-                        board[row, col + i].GetComponentInChildren<BoardUnit>().occupied = true;
-                        GameObject visual = GameObject.Instantiate(cubePrefab, new Vector3(row + 11, 0.4f, col + i), cubePrefab.transform.rotation);
-                        visual.GetComponent<Renderer>().material.color = Color.yellow;
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < size; i++)
-                    {
-                        board[row + i, col].GetComponentInChildren<BoardUnit>().occupied = true;
-                        GameObject visual = GameObject.Instantiate(cubePrefab, new Vector3(row + i + 11, 0.4f, col), cubePrefab.transform.rotation);
-                        visual.GetComponent<Renderer>().material.color = Color.yellow;
-                    }
-                }
-
-                shipPlaced = true;
-            }
-            else
-            {
-                row = Random.Range(0, 9);
-                col = Random.Range(0, 9);
-                hor = Random.Range(0, 2) > 0; // Randomly pick between horizontal and vertical again
-                currentAttempt++;
+                return false;
             }
         }
 
-        if (!shipPlaced)
+        // If we made it here, it's ok to place the ship
+        for (int i = 0; i < size; i++)
         {
-            Debug.LogWarning("Couldn't place ship after " + maxAttempts + " attempts! Consider another action here.");
+            int placeRow = hor ? row : row + i;
+            int placeCol = hor ? col + i : col;
+
+            AssignShipPosition(ship, placeRow, placeCol);
+            board[placeRow, placeCol].GetComponentInChildren<BoardUnit>().occupied = true;
+            GameObject visual = GameObject.Instantiate(cubePrefab, new Vector3(placeRow + 11, 0.4f, placeCol), Quaternion.identity);
+            visual.GetComponent<Renderer>().material.color = Color.yellow;
         }
+        return true;
     }
 }

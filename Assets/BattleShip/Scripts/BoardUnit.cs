@@ -8,6 +8,7 @@ public class BoardUnit : MonoBehaviour
     public TMP_Text tmpBoardUnitLabel;
     public int row;
     public int col;
+    public Ship AssignedShip { get; private set; }
 
     public bool occupied = false;
     public bool hit = false;
@@ -32,6 +33,11 @@ public class BoardUnit : MonoBehaviour
         {
             UpdateColor();
         }
+    }
+
+    public void SetShip(Ship ship)
+    {
+        AssignedShip = ship;
     }
 
     // Method to process hit

@@ -138,7 +138,26 @@ public class BoardUnitManager : MonoBehaviour
                     Debug.Log("Clicked on an enemy board unit!");
                     enemyUnit.ProcessHit(); // Process the hit on the enemy unit
 
-                    // Additional logic (e.g., check if the ship is sunk, switch turns, etc.)
+                    // Check if a ship has been hit and if it has sunk
+                    Ship hitShip = boardEnemy.CheckHit(enemyUnit.row, enemyUnit.col);
+                    if (hitShip != null)
+                    {
+                        if (hitShip.IsSunk())
+                        {
+                            Debug.Log($"{hitShip.Name} has been sunk!");
+                            // Perform any additional actions needed when a ship is sunk
+                        }
+                        else
+                        {
+                            Debug.Log($"{hitShip.Name} has been hit!");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Missed all ships.");
+                    }
+
+                    // Additional logic (e.g., check if the game is over, switch turns, etc.)
                 }
                 else
                 {
